@@ -1,15 +1,3 @@
-# This is an example for train.txt
-
-# The first line is the label for the first sentence.
-label1
-
-# The second line is the first sentence.
-This is the first sentence.
-
-# The third line is the label for the second sentence.
-label2
-
-# The fourth line is the second sentence.
-This is the second sentence.
-
-# And so on...
+This is the first line of the training data.
+This is the second line of the training data.
+This is the third line of the training data.
