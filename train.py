@@ -1,8 +1,8 @@
 import transformers
 
 # Load the GPT4ALL model.
-tokenizer = transformers.AutoTokenizer.from_pretrained("nomic-ai/gpt4all-j")
-model = transformers.AutoModelForCausalLM.from_pretrained("nomic-ai/gpt4all-j")
+tokenizer = transformers.AutoTokenizer.from_pretrained("nomic-ai/gpt2")
+model = transformers.AutoModelForCausalLM.from_pretrained("nomic-ai/gpt2")
 
 # Load the training data.
 train_dataset = transformers.TextDataset(
