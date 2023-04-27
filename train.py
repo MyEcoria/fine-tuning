@@ -1,12 +1,14 @@
-import transformers
-
+from transformers import AutoTokenizer, AutoModelForCausalLM
 # Load the GPT4ALL model.
-model = transformers.GPT4AllModel.from_pretrained("gpt4all")
+
+tokenizer = AutoTokenizer.from_pretrained("nomic-ai/gpt4all-j")
+
+model = AutoModelForCausalLM.from_pretrained("nomic-ai/gpt4all-j")
 
 # Load the training data.
 train_dataset = transformers.datasets.TextDataset(
     "train.txt",
-    tokenizer=model.tokenizer,
+    tokenizer=tokenizer,
     max_length=512,
     shuffle=True,
 )
