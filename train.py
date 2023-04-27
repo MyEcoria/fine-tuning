@@ -1,49 +1,46 @@
 import transformers
 
-# Load the GPT2 model and tokenizer.
-tokenizer = transformers.AutoTokenizer.from_pretrained("gpt2")
-model = transformers.AutoModelForCausalLM.from_pretrained("gpt2")
+# specify model configuration
+model_name = "gpt2"
+model_config = transformers.GPT2Config.from_pretrained(model_name)
 
-# Load the training data.
+# create the tokenizer
+tokenizer = transformers.GPT2Tokenizer.from_pretrained(model_name)
+
+# create the model
+model = transformers.TFGPT2LMHeadModel.from_pretrained(model_name, config=model_config)
+
+# specify training arguments
+training_args = transformers.TrainingArguments(
+    output_dir="./models",
+    overwrite_output_dir=True,
+    num_train_epochs=1,
+    per_device_train_batch_size=1,
+    save_steps=1000,
+    save_total_limit=1,
+)
+
+# create the text dataset
 train_dataset = transformers.TextDataset(
-    "train.txt",
     tokenizer=tokenizer,
-    max_length=512,
+    file_path="./data/train.txt",
     block_size=128,
 )
 
-# Define the training parameters.
-num_epochs = 10
-learning_rate = 3e-5
-batch_size = 32
-
-# Initialize the optimizer and the scheduler.
-optimizer = transformers.AdamW(model.parameters(), lr=learning_rate)
-scheduler = transformers.get_linear_schedule_with_warmup(optimizer, num_warmup_steps=0, num_training_steps=len(train_dataset)*num_epochs)
-
-# Train the model.
-training_args = transformers.TrainingArguments(
-    output_dir='./results',
-    num_train_epochs=num_epochs,
-    per_device_train_batch_size=batch_size,
-    save_steps=5000,
-    learning_rate=learning_rate,
-    warmup_steps=0,
-    weight_decay=0.01,
-    logging_dir='./logs',
-    logging_steps=500,
-    dataloader_num_workers=4,
-    seed=42,
+# create the data collator
+data_collator = transformers.DataCollatorForLanguageModeling(
+    tokenizer=tokenizer, mlm=False,
 )
+
+# create the trainer and train the model
 trainer = transformers.Trainer(
     model=model,
     args=training_args,
     train_dataset=train_dataset,
-    data_collator=transformers.DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
-    optimizer=optimizer,
-    scheduler=scheduler,
+    data_collator=data_collator,
 )
+
 trainer.train()
 
-# Save the fine-tuned model.
-model.save_pretrained("finetuned_model")
+# save the trained model
+model.save_pretrained("./models/trained_model")
