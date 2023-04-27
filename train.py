@@ -1,7 +1,7 @@
 import transformers
 
 # Load the GPT4ALL model.
-model = transformers.GPT4ALLModel.from_pretrained("./gpt4all.bin")
+model = transformers.GPT4AllModel.from_pretrained("gpt4all")
 
 # Load the training data.
 train_dataset = transformers.datasets.TextDataset(
